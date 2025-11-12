@@ -8,6 +8,7 @@ import { useInfinitePostsData } from "@/hooks/queries/use-infinite-posts-data";
 export default function PostFeed() {
   const { data, error, isPending, fetchNextPage, isFetchingNextPage } =
     useInfinitePostsData();
+
   const { ref, inView } = useInView();
   useEffect(() => {
     if (inView) {
