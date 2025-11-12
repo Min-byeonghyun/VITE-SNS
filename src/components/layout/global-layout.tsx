@@ -16,7 +16,7 @@ export default function GlobalLayout() {
             />
             <div className="font-bold">BITE-SNS</div>
           </Link>
-          <div className="flex items-center">
+          <div className="flex items-center gap-3">
             <div className="hover:bg-muted cursor-pointer rounded-full p-2">
               <SunIcon />
             </div>
