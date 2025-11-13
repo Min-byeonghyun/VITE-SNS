@@ -20,7 +20,7 @@ export default function GlobalLayout() {
             <div className="hover:bg-muted cursor-pointer rounded-full p-2">
               <SunIcon />
             </div>
-            <img className="h-6 cursor-pointer" src={defaultAvatar} />
+            <img className="h-6 cursor-pointer " src={defaultAvatar} />
           </div>
         </div>
       </header>
