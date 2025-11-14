@@ -9,6 +9,7 @@ type CreateMode = {
   type: "CREATE";
   postId: number;
 };
+
 type EditMode = {
   type: "EDIT";
   commentId: number;
@@ -16,17 +17,24 @@ type EditMode = {
   onClose: () => void;
 };
 
-type Props = CreateMode | EditMode;
+type ReplyMode = {
+  type: "REPLY";
+  postId: number;
+  parentCommentId: number;
+  onClose: () => void;
+};
+
+type Props = CreateMode | EditMode | ReplyMode;
 
 export default function CommentEditor(props: Props) {
-  const [content, setContent] = useState("");
   const { mutate: createComment, isPending: isCreateCommentPending } =
     useCreateComment({
       onSuccess: () => {
         setContent("");
+        if (props.type === "REPLY") props.onClose();
       },
       onError: (error) => {
-        toast.error("댓글 추가에 실패했습니다.", {
+        toast.error("댓글 추가에 실패했습니다", {
           position: "top-center",
         });
       },
@@ -38,12 +46,19 @@ export default function CommentEditor(props: Props) {
         (props as EditMode).onClose();
       },
       onError: (error) => {
-        toast.error("댓글수정에 실패했습니다", {
+        toast.error("댓글 수정에 실패했습니다.", {
           position: "top-center",
         });
       },
     });
-  const isPending = isCreateCommentPending || isUpdateCommentPending;
+
+  const [content, setContent] = useState("");
+
+  useEffect(() => {
+    if (props.type === "EDIT") {
+      setContent(props.initialContent);
+    }
+  }, []);
 
   const handleSubmitClick = () => {
     if (content.trim() === "") return;
@@ -53,21 +68,21 @@ export default function CommentEditor(props: Props) {
         postId: props.postId,
         content,
       });
+    } else if (props.type === "REPLY") {
+      createComment({
+        postId: props.postId,
+        content,
+        parentCommentId: props.parentCommentId,
+      });
     } else {
       updateComment({
         id: props.commentId,
         content,
       });
     }
-
-    //서버 요청
   };
 
-  useEffect(() => {
-    if (props.type === "EDIT") {
-      setContent(props.initialContent);
-    }
-  }, []);
+  const isPending = isCreateCommentPending || isUpdateCommentPending;
 
   return (
     <div className="flex flex-col gap-2">
@@ -77,15 +92,16 @@ export default function CommentEditor(props: Props) {
         onChange={(e) => setContent(e.target.value)}
       />
       <div className="flex justify-end gap-2">
-        {props.type === "EDIT" && (
-          <Button
-            disabled={isPending}
-            variant={"outline"}
-            onClick={() => props.onClose()}
-          >
-            취소
-          </Button>
-        )}
+        {props.type === "EDIT" ||
+          (props.type === "REPLY" && (
+            <Button
+              disabled={isPending}
+              variant={"outline"}
+              onClick={() => props.onClose()}
+            >
+              취소
+            </Button>
+          ))}
         <Button disabled={isPending} onClick={handleSubmitClick}>
           작성
         </Button>
