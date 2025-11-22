@@ -26,7 +26,7 @@ function toNestedComments(comments: Comment[]): NestedComment[] {
       });
     }
   });
-  console.log(result);
+
   return result;
 }
 
