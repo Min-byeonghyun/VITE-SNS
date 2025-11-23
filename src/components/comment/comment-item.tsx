@@ -74,7 +74,7 @@ export default function CommentItem(props: NestedComment) {
             <div>
               {isOverTowLevels && (
                 <span className="font-bold text-blue-500">
-                  @{props.parentComment?.author.nickname}
+                  @{props.parentComment?.author.nickname}&nbsp;
                 </span>
               )}
               {props.content}
