@@ -47,7 +47,7 @@ export async function updateProfile({
   //2. 새로운 아바타 이미지 업로드
   if (avatarImageFile) {
     const fileExtension = avatarImageFile.name.split(".").pop() || "webp";
-    const filePath = `${userId}/avatar/${new Date().getTime}-${crypto.randomUUID()}.${fileExtension}`;
+    const filePath = `${userId}/avatar/${new Date().getTime()}-${crypto.randomUUID()}.${fileExtension}`;
 
     newAvatarImageUrl = await uploadImage({
       file: avatarImageFile,
